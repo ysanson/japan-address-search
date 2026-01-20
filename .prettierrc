@@ -1,0 +1,14 @@
+{
+	"semi": true,
+	"tabWidth": 2,
+	"useTabs": true,
+	"trailingComma": "es5",
+	"printWidth": 80,
+	"arrowParens": "always",
+	"endOfLine": "lf",
+	"plugins": [
+		"prettier-plugin-organize-imports",
+		"prettier-plugin-organize-attributes",
+		"prettier-plugin-tailwindcss"
+	]
+}
