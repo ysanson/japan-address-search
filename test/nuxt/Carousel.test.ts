@@ -22,7 +22,6 @@ vi.mock("pinia", async () => {
 	};
 });
 
-
 const mockUseAddressStore = vi.mocked(useAddressStore);
 const mockStoreToRefs = vi.mocked(storeToRefs);
 
@@ -57,6 +56,7 @@ describe("Carousel.vue", () => {
 
 		// Provide mocked store and storeToRefs used in the SFC
 		mockUseAddressStore.mockReturnValue({ addresses: addressesRef });
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		mockStoreToRefs.mockImplementation((store: any) => ({
 			addresses: store.addresses,
 		}));

@@ -1,4 +1,8 @@
-import type { Address, ApiResponse, PostalCodeAddresses } from "@/types/apiResponse";
+import type {
+	Address,
+	ApiResponse,
+	PostalCodeAddresses,
+} from "@/types/apiResponse";
 
 /**
  * Type guard to check if an object is a valid Address

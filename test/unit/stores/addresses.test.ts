@@ -1,6 +1,9 @@
+import { createPinia, defineStore, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createPinia, setActivePinia, defineStore } from "pinia";
-import type { ApiResponse, PostalCodeAddresses } from "../../../app/types/apiResponse";
+import type {
+	ApiResponse,
+	PostalCodeAddresses,
+} from "../../../app/types/apiResponse";
 
 // Mock fetch globally
 global.fetch = vi.fn();

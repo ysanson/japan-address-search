@@ -47,19 +47,25 @@ describe("postalCode utilities", () => {
 			it("should reject postal code with letters", () => {
 				const result = validatePostalCode("abc-defg");
 				expect(result.isValid).toBe(false);
-				expect(result.error).toContain("半角数字のみまたは半角数字とハイフンのみで");
+				expect(result.error).toContain(
+					"半角数字のみまたは半角数字とハイフンのみで"
+				);
 			});
 
 			it("should reject postal code with special characters", () => {
 				const result = validatePostalCode("123@4567");
 				expect(result.isValid).toBe(false);
-				expect(result.error).toContain("半角数字のみまたは半角数字とハイフンのみで");
+				expect(result.error).toContain(
+					"半角数字のみまたは半角数字とハイフンのみで"
+				);
 			});
 
 			it("should reject postal code with spaces", () => {
 				const result = validatePostalCode("123 4567");
 				expect(result.isValid).toBe(false);
-				expect(result.error).toContain("半角数字のみまたは半角数字とハイフンのみで");
+				expect(result.error).toContain(
+					"半角数字のみまたは半角数字とハイフンのみで"
+				);
 			});
 
 			it("should reject too short postal code", () => {

@@ -59,6 +59,8 @@ const handleSubmit = async () => {
 					:aria-invalid="!!errorMessage"
 					aria-describedby="postal-code-error"
 					maxlength="8"
+					inputmode="numeric"
+					autocomplete="postal-code"
 				/>
 				<Button
 					type="submit"
