@@ -1,50 +1,31 @@
-// @ts-check
-import prettier from "eslint-config-prettier";
-import { existsSync } from "node:fs";
+import withNuxt from "./.nuxt/eslint.config.mjs";
 
-const eslintConfigPath = "./.nuxt/eslint.config.mjs";
+import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginPrettier from "eslint-plugin-prettier";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
-async function getConfig() {
-	// Custom rules override
-	const customRules = {
-		rules: {
-			"vue/require-default-prop": "off",
-			"vue/multi-word-component-names": "off",
-			"vue/html-end-tags": "off",
-			"vue/no-parsing-error": "off",
+export default withNuxt([
+	{
+		plugins: {
+			prettier: eslintPluginPrettier,
 		},
-	};
-
-	// Only import Nuxt ESLint config if it exists
-	if (existsSync(eslintConfigPath)) {
-		try {
-			const withNuxt = (await import(eslintConfigPath)).default;
-			return withNuxt(
-				customRules,
-				// Prettier must be last to override other configs
-				prettier
-			);
-		} catch (error) {
-			// Fallback if import fails
-			console.error("Error importing Nuxt ESLint config:", error);
-			return [
-				{
-					ignores: [".nuxt/**", "dist/**", ".output/**"],
-				},
-				customRules,
-				prettier,
-			];
-		}
-	} else {
-		// Fallback config if .nuxt is not generated yet
-		return [
-			{
-				ignores: [".nuxt/**", "dist/**", ".output/**"],
-			},
-			customRules,
-			prettier,
-		];
-	}
-}
-
-export default getConfig();
+		rules: {
+			...eslintConfigPrettier.rules,
+			...eslintPluginPrettierRecommended.rules,
+			"vue/multi-word-component-names": "off",
+			"vue/attributes-order": "off",
+		},
+		ignores: [
+			".nuxt/*",
+			".nuxt/*/**",
+			".vscode/*",
+			".vscode/*/**",
+			".output/*",
+			".output/*/**",
+			"node_modules",
+			"pnpm-lock.yaml",
+			"yarn.lock",
+			"package-lock.json",
+		],
+	},
+]);
