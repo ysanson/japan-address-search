@@ -24,18 +24,21 @@ export const useAddressStore = defineStore("addressStore", {
 	},
 	actions: {
 		async fetchPostalCode(postalCode: string) {
-			const response = await fetch(
-				`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`
-			);
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+			const { data, pending, error } = await useApi<ApiResponse>("/search", {
+				params: { zipcode: postalCode },
+				responseType: "json",
+			});
+			if (error.value) {
+				throw createError(error.value);
 			}
-			const data: ApiResponse = await response.json();
-			if (data.status !== 200 || data.results === null) {
-				throw new Error(`No address found for postal code ${postalCode}`);
+			if (data.value) {
+				if (data.value.status !== 200 || data.value.results === null) {
+					throw new Error(`No address found for postal code ${postalCode}`);
+				}
+				this.showFirstResult = true;
+				this.addresses.push(data.value.results!);
 			}
-			this.showFirstResult = true;
-			this.addresses.push(data.results!);
+			return { data, pending, error };
 		},
 	},
 });

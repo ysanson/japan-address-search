@@ -1,6 +1,6 @@
 export interface ApiResponse {
-	message?: string;
-	results?: PostalCodeAddresses;
+	message: string | null;
+	results: PostalCodeAddresses | null;
 	status: number;
 }
 

@@ -4,6 +4,11 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	css: ["~/assets/scss/main.scss"],
 	ssr: false,
+	runtimeConfig: {
+		public: {
+			apiUrl: process.env.NUXT_PUBLIC_API_URL,
+		},
+	},
 	modules: [
 		"@nuxt/eslint",
 		"@nuxt/test-utils",
