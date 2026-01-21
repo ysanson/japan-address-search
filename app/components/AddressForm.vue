@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { validatePostalCode } from "@/utils/postalCode";
 
 const { fetchPostalCode } = useAddressStore();
 
@@ -7,33 +8,13 @@ const postalCode = defineModel<string>();
 const errorMessage = ref<string | null>(null);
 const loading = ref(false);
 
-const validatePostalCode = () => {
-	errorMessage.value = null;
-
-	// Check for invalid characters
-	if (!/^[0-9-]+$/.test(postalCode.value || "")) {
-		errorMessage.value =
-			"郵便番号は半角数字のみまたは半角数字とハイフンのみで入力してください。";
-		return false;
-	}
-
-	// Check for correct format
-	if (
-		!/^\d{3}-\d{4}$/.test(postalCode.value || "") &&
-		!/^\d{7}$/.test(postalCode.value || "")
-	) {
-		errorMessage.value =
-			"郵便番号は半角数字でハイフンありの8桁かハイフンなしの7桁で入力してください。";
-		return false;
-	}
-
-	return true;
-};
-
 const handleSubmit = async () => {
-	if (!validatePostalCode()) {
+	const validation = validatePostalCode(postalCode.value ?? "");
+	if (!validation.isValid) {
+		errorMessage.value = validation.error ?? null;
 		return;
 	}
+	errorMessage.value = null;
 	loading.value = true;
 	try {
 		await fetchPostalCode(postalCode.value!);

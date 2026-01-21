@@ -11,8 +11,8 @@ defineProps<{
 			郵便番号: {{ addresses[0]?.zipcode }}
 		</header>
 		<div v-for="(address, i) in addresses" :key="i">
-			{{ `${address.address1}${address.address2}${address.address3}` }} <br />
-			{{ `${address.kana1}${address.kana2}${address.kana3}` }}
+			{{ formatFullAddress(address) }} <br />
+			{{ formatFullKana(address) }}
 			<hr v-if="i !== addresses.length - 1" />
 		</div>
 	</article>
