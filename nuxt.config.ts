@@ -7,7 +7,8 @@ export default defineNuxtConfig({
 	modules: [
 		"@nuxt/eslint",
 		"@nuxt/test-utils",
-		"@pinia/nuxt",
+		["@pinia/nuxt", { autoImports: ["defineStore"] }],
+		"pinia-plugin-persistedstate/nuxt",
 		[
 			"@nuxt/fonts",
 			{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { lastAddress } = storeToRefs(useAddressStore());
+const { lastAddress, addresses } = storeToRefs(useAddressStore());
 const updated = ref(false);
 watch(lastAddress, () => {
 	updated.value = true;
@@ -29,7 +29,6 @@ watch(lastAddress, () => {
 		</Transition>
 		<hr />
 		<h2>検索履歴</h2>
-		<Carousel v-if="!!lastAddress" />
-		<span v-else>No history yet.</span>
+		<Carousel v-if="addresses.length > 0" />
 	</div>
 </template>

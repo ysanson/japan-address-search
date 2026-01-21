@@ -5,6 +5,7 @@ const { fetchPostalCode } = useAddressStore();
 
 const postalCode = defineModel<string>();
 const errorMessage = ref<string | null>(null);
+const loading = ref(false);
 
 const validatePostalCode = () => {
 	errorMessage.value = null;
@@ -33,11 +34,14 @@ const handleSubmit = async () => {
 	if (!validatePostalCode()) {
 		return;
 	}
+	loading.value = true;
 	try {
 		await fetchPostalCode(postalCode.value!);
 		postalCode.value = "";
 	} catch {
 		errorMessage.value = "郵便番号が存在しません。";
+	} finally {
+		loading.value = false;
 	}
 };
 </script>
@@ -60,6 +64,7 @@ const handleSubmit = async () => {
 					type="submit"
 					label="検索"
 					:disabled="!postalCode || postalCode?.length === 0"
+					:loading="loading"
 				/>
 			</fieldset>
 
