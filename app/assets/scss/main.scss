@@ -5,3 +5,38 @@
 	padding-top: 2rem;
 	padding-bottom: 2rem;
 }
+
+.center-text {
+	text-align: center;
+}
+
+.half-width {
+	max-width: 100%;
+}
+
+@media (min-width: 1024px) {
+	.half-width {
+		max-width: 50%;
+		margin-inline: auto;
+	}
+}
+
+.fade-enter-active,
+.fade-leave-active {
+	transition:
+		opacity 0.3s ease,
+		transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+	transform: translateY(-8px);
+}
+
+.address-card {
+	transition: background-color 0.2s ease;
+}
+.address-card.flash {
+	background-color: var(--pico-color-slate-50);
+}

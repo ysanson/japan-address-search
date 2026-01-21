@@ -72,15 +72,14 @@ const onPointerUp = () => {
 			@pointerleave="onPointerUp"
 			:style="{ '--page': currentPage }"
 		>
-			<div class="carousel__track">
+			<TransitionGroup class="carousel__track" name="slide" tag="div">
 				<AddressCard
-					class="pico-background-grey-150"
 					v-for="(addr, i) in addresses.toReversed()"
 					is-history
 					:key="i"
 					:addresses="addr"
 				/>
-			</div>
+			</TransitionGroup>
 		</div>
 
 		<nav class="carousel__controls">
@@ -160,5 +159,24 @@ const onPointerUp = () => {
 			}
 		}
 	}
+}
+.slide-enter-active,
+.slide-leave-active {
+	transition: all 0.3s ease;
+}
+
+.slide-enter-from {
+	opacity: 0;
+	transform: translateX(-16px);
+}
+
+.slide-leave-to {
+	opacity: 0;
+	transform: translateX(16px);
+}
+
+/* Prevent layout jump */
+.slide-leave-active {
+	position: absolute;
 }
 </style>

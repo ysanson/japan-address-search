@@ -12,7 +12,7 @@ const validatePostalCode = () => {
 	// Check for invalid characters
 	if (!/^[0-9-]+$/.test(postalCode.value || "")) {
 		errorMessage.value =
-			"Please enter the postal code using only half-width numbers or half-width numbers and a hyphen.";
+			"郵便番号は半角数字のみまたは半角数字とハイフンのみで入力してください。";
 		return false;
 	}
 
@@ -22,7 +22,7 @@ const validatePostalCode = () => {
 		!/^\d{7}$/.test(postalCode.value || "")
 	) {
 		errorMessage.value =
-			"Please enter a postal code in either 8 digits with a hyphen or 7 digits without a hyphen.";
+			"郵便番号は半角数字でハイフンありの8桁かハイフンなしの7桁で入力してください。";
 		return false;
 	}
 
@@ -35,8 +35,9 @@ const handleSubmit = async () => {
 	}
 	try {
 		await fetchPostalCode(postalCode.value!);
+		postalCode.value = "";
 	} catch {
-		errorMessage.value = "The postal code does not exist.";
+		errorMessage.value = "郵便番号が存在しません。";
 	}
 };
 </script>
@@ -55,7 +56,11 @@ const handleSubmit = async () => {
 					aria-describedby="postal-code-error"
 					maxlength="8"
 				/>
-				<Button type="submit" label="Search" />
+				<Button
+					type="submit"
+					label="検索"
+					:disabled="!postalCode || postalCode?.length === 0"
+				/>
 			</fieldset>
 
 			<small id="postal-code-error" v-if="errorMessage">

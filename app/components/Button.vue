@@ -8,7 +8,16 @@ interface ButtonProps {
 defineProps<ButtonProps>();
 </script>
 <template>
-	<button :type="type" :class="[color ? color : '', outline ? 'outline' : '']">
+	<button
+		class="japanese-button"
+		:type="type"
+		:class="[color ? color : '', outline ? 'outline' : '']"
+	>
 		{{ label }}
 	</button>
 </template>
+<style lang="scss" scoped>
+.japanese-button {
+	white-space: nowrap;
+}
+</style>

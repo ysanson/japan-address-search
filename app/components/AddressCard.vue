@@ -6,14 +6,40 @@ defineProps<{
 }>();
 </script>
 <template>
-	<article>
-		<header :class="isHistory ? 'pico-background-grey-200' : ''">
+	<article :class="isHistory ? 'history-card-background' : ''">
+		<header :class="isHistory ? 'history-header-background' : ''">
 			郵便番号: {{ addresses[0]?.zipcode }}
 		</header>
 		<div v-for="(address, i) in addresses" :key="i">
 			{{ `${address.address1}${address.address2}${address.address3}` }} <br />
 			{{ `${address.kana1}${address.kana2}${address.kana3}` }}
-			<hr />
+			<hr v-if="i !== addresses.length - 1" />
 		</div>
 	</article>
 </template>
+<style lang="scss">
+.history-header-background {
+	background-color: var(--history-header-bg);
+	color: var(--pico-contrast-color);
+}
+
+.history-card-background {
+	background-color: var(--history-bg);
+	color: var(--pico-contrast-color);
+}
+
+/* Light mode */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+	--history-header-bg: var(--pico-color-grey-200);
+	--history-bg: var(--pico-color-grey-150);
+}
+
+/* Dark mode */
+@media only screen and (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+		--history-header-bg: var(--pico-color-slate-600);
+		--history-bg: var(--pico-color-slate-500);
+	}
+}
+</style>
