@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { validatePostalCode } from "@/utils/postalCode";
-import { NoResultsError, ApiCommunicationError } from "@/stores/addresses";
+import { NoResultsError } from "@/stores/addresses";
 
 const { fetchPostalCode } = useAddressStore();
 
