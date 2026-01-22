@@ -120,7 +120,7 @@ const onPointerUp = () => {
 			grid-auto-flow: column;
 			grid-auto-columns: 100%;
 			grid-template-rows: repeat(3, auto);
-			transform: translateX(calc(-100% * var(--page)));
+			transform: translateX(calc((-100% - var(--gap)) * var(--page)));
 		}
 		.carousel__viewport {
 			align-self: stretch;
@@ -131,7 +131,7 @@ const onPointerUp = () => {
 		&__track {
 			grid-auto-flow: column;
 			grid-auto-columns: calc((100% - 2 * var(--gap)) / 3);
-			transform: translateX(calc(-100% * var(--page)));
+			transform: translateX(calc(((100% + var(--gap)) * var(--page)) * -1));
 		}
 	}
 

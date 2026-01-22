@@ -72,17 +72,15 @@ function getMapsUrl(address: Address): string {
 	align-items: center;
 	gap: 0.75rem;
 
-	/* prevent button from stretching */
 	> a[role="button"] {
 		flex-shrink: 0;
 		padding: 0.25rem 0.4rem;
 		min-width: auto;
 	}
 
-	/* text block can wrap */
 	> div {
 		flex: 1;
-		min-width: 0; // important for long Japanese text
+		min-width: 0;
 	}
 
 	p {

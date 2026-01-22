@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Run lint-staged which will run eslint --fix and prettier --write on staged files
+pnpm lint-staged || true
