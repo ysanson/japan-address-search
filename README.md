@@ -35,13 +35,20 @@
 
 ## インストール方法
 
-Node.js 24 が必要です。  
-https://nodejs.org/en/download
+Node.js 24 が必要です。ダウンロードは[こちら](https://nodejs.org/en/download). `pnpm`もインストールすることは必要となります。
 
 ```bash
 corepack enable pnpm
 pnpm install
 ```
+
+また、API URLが含まれているため、`.env.example` を適切な `.env` ファイルにコピーする必要があります。例えば、
+
+```bash
+cat .env.example > .env
+```
+
+を実行することでコピーできます。
 
 ## プロジェクトの起動方法
 

@@ -60,5 +60,6 @@
 		"*.{json,md,yml,yaml,css,scss,html}": [
 			"prettier --write"
 		]
-	}
+	},
+	"packageManager": "pnpm@10.28.1"
 }

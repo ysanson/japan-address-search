@@ -38,6 +38,8 @@ Below is the versions of the principal technologies and libraries used to make t
 To launch this project, you need to have Node 24 installed. You can download it at [Nodejs.org](https://nodejs.org/en/download). `pnpm` is also required, and can be activated using `corepack enable pnpm`.
 Then, on the project root, install the dependencies by running `pnpm install`. For an overview of all of the available commands, please take a look inside the `package.json` file.
 
+You also need to copy the `.env.example` in a proper `.env` file, as it contains the API URL. You can copy by running `cat .env.example > .env` for example.
+
 ## Launching the project
 
 ### Development preview
