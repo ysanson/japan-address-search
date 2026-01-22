@@ -1,6 +1,5 @@
 @use "@picocss/pico/css/pico.min.css";
 @use "@picocss/pico/scss/pico.colors.scss" as *;
-@use "loader.scss";
 
 .page-content {
 	padding-top: 2rem;
@@ -9,44 +8,6 @@
 
 .center-text {
 	text-align: center;
-}
-
-// Japanese text wrapping improvements
-hgroup {
-	// Better line breaking for Japanese text
-	word-break: keep-all; // Prevents breaking in the middle of words
-	overflow-wrap: break-word; // Allows breaking at appropriate points
-	line-break: strict; // Uses strict line breaking rules for CJK text
-
-	p {
-		// Improve readability on mobile
-		word-break: keep-all;
-		overflow-wrap: anywhere;
-		line-break: strict;
-
-		// Prevent orphaned punctuation
-		hanging-punctuation: allow-end;
-
-		// Better spacing for Japanese text
-		line-height: 1.8;
-
-		@media (max-width: 768px) {
-			// Slightly reduce font size on mobile for better fitting
-			font-size: 0.9rem;
-			line-height: 1.7;
-		}
-	}
-
-	h1 {
-		// Prevent breaking of the title
-		word-break: keep-all;
-		white-space: nowrap;
-
-		@media (max-width: 768px) {
-			// Allow wrapping on very small screens if needed
-			white-space: normal;
-		}
-	}
 }
 
 .half-width {

@@ -11,5 +11,5 @@ export function formatFullAddress(address: Address): string {
  * Formats a full kana address string from an Address object
  */
 export function formatFullKana(address: Address): string {
-	return `${address.kana1}${address.kana2}${address.kana3}`;
+	return `${address.kana1}${address.kana2}${address.kana3}`.normalize("NFKC");
 }

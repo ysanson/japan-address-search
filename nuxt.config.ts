@@ -9,6 +9,15 @@ export default defineNuxtConfig({
 			apiUrl: process.env.NUXT_PUBLIC_API_URL,
 		},
 	},
+	app: {
+		head: {
+			title: "住所検索",
+			htmlAttrs: {
+				lang: "jp",
+			},
+			link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+		},
+	},
 	modules: [
 		"@nuxt/eslint",
 		"@nuxt/test-utils",

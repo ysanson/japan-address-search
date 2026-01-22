@@ -15,18 +15,9 @@ defineProps<ButtonProps>();
 		:type="type"
 		:disabled="disabled || loading"
 		:class="[color ? color : '', outline ? 'outline' : '']"
+		:aria-busy="loading"
 	>
-		<template v-if="loading">
-			<div class="lds-ring">
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-			</div>
-		</template>
-		<template v-else>
-			{{ label }}
-		</template>
+		{{ label }}
 	</button>
 </template>
 <style lang="scss" scoped>

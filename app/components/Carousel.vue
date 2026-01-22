@@ -112,6 +112,7 @@ const onPointerUp = () => {
 		display: grid;
 		gap: var(--gap);
 		transition: transform 0.4s ease;
+		align-items: start;
 	}
 
 	@media (max-width: 767px) {
