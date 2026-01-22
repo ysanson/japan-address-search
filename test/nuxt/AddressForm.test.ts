@@ -4,14 +4,18 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import AddressForm from "../../app/components/AddressForm.vue";
 import Button from "../../app/components/Button.vue";
-import { useAddressStore } from "../../app/stores/addresses";
 
 // Mock the store module
-vi.mock("../../app/stores/addresses", () => ({
-	useAddressStore: vi.fn(),
-}));
+vi.mock("../../app/stores/addresses", async (importOriginal) => {
+	const actual = await importOriginal<typeof import("../../app/stores/addresses")>();
+	return {
+		...actual,
+		useAddressStore: vi.fn(),
+	};
+});
 
-// Import the mocked function after mocking
+// Import after mocking
+const { useAddressStore, ApiCommunicationError, NoResultsError } = await import("../../app/stores/addresses");
 
 const mockUseAddressStore = vi.mocked(useAddressStore);
 
@@ -89,8 +93,10 @@ describe("AddressForm.vue", () => {
 		expect(wrapper.find("#postal-code-error").exists()).toBe(false);
 	});
 
-	it("shows error when fetch fails", async () => {
-		const failingFetch = vi.fn().mockRejectedValue(new Error("not found"));
+	it("shows error when fetch fails with ApiCommunicationError", async () => {
+		const failingFetch = vi
+			.fn()
+			.mockRejectedValue(new ApiCommunicationError("Unknown error"));
 		const { wrapper } = await mountForm(failingFetch);
 		const input = wrapper.get('input[aria-label="postal-code"]');
 
@@ -99,7 +105,23 @@ describe("AddressForm.vue", () => {
 		await flushPromises();
 
 		expect(wrapper.get("#postal-code-error").text()).toContain(
-			"郵便番号が存在しません"
+			"エラーが発生しました。"
+		);
+	});
+
+	it("shows error when postal code is not found (NoResultsError)", async () => {
+		const notFoundFetch = vi
+			.fn()
+			.mockRejectedValue(new NoResultsError("123-4567"));
+		const { wrapper } = await mountForm(notFoundFetch);
+		const input = wrapper.get('input[aria-label="postal-code"]');
+
+		await input.setValue("123-4567");
+		await wrapper.get("form").trigger("submit");
+		await flushPromises();
+
+		expect(wrapper.get("#postal-code-error").text()).toContain(
+			"郵便番号が存在しません。"
 		);
 	});
 });

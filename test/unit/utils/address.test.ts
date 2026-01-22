@@ -30,7 +30,9 @@ describe("address utilities", () => {
 
 	describe("formatFullKana", () => {
 		it("should concatenate kana parts", () => {
-			expect(formatFullKana(validAddress)).toBe("ﾄｳｷｮｳﾄﾁﾖﾀﾞｸﾏﾙﾉｳﾁ");
+			expect(formatFullKana(validAddress)).toBe(
+				"トウキョウトチヨダクマルノウチ"
+			);
 		});
 
 		it("should handle empty kana parts", () => {
@@ -38,7 +40,7 @@ describe("address utilities", () => {
 				...validAddress,
 				kana3: "",
 			};
-			expect(formatFullKana(emptyKana)).toBe("ﾄｳｷｮｳﾄﾁﾖﾀﾞｸ");
+			expect(formatFullKana(emptyKana)).toBe("トウキョウトチヨダク");
 		});
 	});
 });

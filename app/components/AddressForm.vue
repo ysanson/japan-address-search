@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { validatePostalCode } from "@/utils/postalCode";
+import { NoResultsError, ApiCommunicationError } from "@/stores/addresses";
 
 const { fetchPostalCode } = useAddressStore();
 
@@ -19,8 +20,12 @@ const handleSubmit = async () => {
 	try {
 		await fetchPostalCode(postalCode.value!);
 		postalCode.value = "";
-	} catch {
-		errorMessage.value = "郵便番号が存在しません。";
+	} catch (error) {
+		if (error instanceof NoResultsError) {
+			errorMessage.value = "郵便番号が存在しません。";
+		} else {
+			errorMessage.value = "エラーが発生しました。";
+		}
 	} finally {
 		loading.value = false;
 	}

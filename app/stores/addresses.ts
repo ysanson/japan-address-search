@@ -1,5 +1,22 @@
 import type { ApiResponse, PostalCodeAddresses } from "@/types/apiResponse";
 
+export class NoResultsError extends Error {
+	constructor(postalCode: string) {
+		super(`No address found for postal code ${postalCode}`);
+		this.name = "NoResultsError";
+	}
+}
+
+export class ApiCommunicationError extends Error {
+	constructor(
+		message: string,
+		public originalError?: unknown
+	) {
+		super(message);
+		this.name = "ApiCommunicationError";
+	}
+}
+
 interface AddressStore {
 	addresses: PostalCodeAddresses[];
 	showFirstResult: boolean;
@@ -28,16 +45,25 @@ export const useAddressStore = defineStore("addressStore", {
 				params: { zipcode: postalCode },
 				responseType: "json",
 			});
+
 			if (error.value) {
-				throw createError(error.value);
+				throw new ApiCommunicationError(
+					`Failed to communicate with the API: ${error.value.message || "Unknown error"}`,
+					error.value
+				);
 			}
-			if (data.value) {
-				if (data.value.status !== 200 || data.value.results === null) {
-					throw new Error(`No address found for postal code ${postalCode}`);
-				}
-				this.showFirstResult = true;
-				this.addresses.push(data.value.results!);
+
+			if (!data.value || data.value.status !== 200) {
+				throw new ApiCommunicationError("No data received from the API");
 			}
+
+			if (data.value.status === 200 && data.value.results === null) {
+				throw new NoResultsError(postalCode);
+			}
+
+			this.showFirstResult = true;
+			this.addresses.push(data.value.results ?? []);
+
 			return { data, pending, error };
 		},
 	},

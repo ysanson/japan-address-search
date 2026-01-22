@@ -8,6 +8,21 @@ import type {
 // Mock fetch globally
 global.fetch = vi.fn();
 
+// Custom error classes for testing
+class NoResultsError extends Error {
+	constructor(postalCode: string) {
+		super(`No address found for postal code ${postalCode}`);
+		this.name = "NoResultsError";
+	}
+}
+
+class ApiCommunicationError extends Error {
+	constructor(message: string, public originalError?: unknown) {
+		super(message);
+		this.name = "ApiCommunicationError";
+	}
+}
+
 // Define the store inline for unit testing (since we're in Node environment without Nuxt auto-imports)
 interface AddressStore {
 	addresses: PostalCodeAddresses[];
@@ -24,17 +39,29 @@ const useAddressStore = defineStore("addressStore", {
 	},
 	actions: {
 		async fetchPostalCode(postalCode: string) {
-			const response = await fetch(
-				`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`
-			);
+			let response: Response;
+			try {
+				response = await fetch(
+					`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`
+				);
+			} catch (error) {
+				throw new ApiCommunicationError(
+					`Failed to communicate with the API: ${error instanceof Error ? error.message : 'Unknown error'}`,
+					error
+				);
+			}
+			
 			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+				throw new ApiCommunicationError(`HTTP error! status: ${response.status}`);
 			}
+			
 			const data: ApiResponse = await response.json();
+			
 			if (data.status !== 200 || data.results === null) {
-				throw new Error(`No address found for postal code ${postalCode}`);
+				throw new NoResultsError(postalCode);
 			}
-			this.addresses.push(data.results!);
+			
+			this.addresses.push(data.results);
 		},
 	},
 });
@@ -126,10 +153,24 @@ describe("useAddressStore", () => {
 			expect(store.addresses[0]).toEqual(mockResponse.results);
 		});
 
-		it("should throw error when HTTP response is not ok", async () => {
+		it("should throw ApiCommunicationError when HTTP response is not ok", async () => {
 			const store = useAddressStore();
 
-			vi.mocked(fetch).mockResolvedValueOnce({
+			vi.mocked(fetch).mockResolvedValue({
+				ok: false,
+				status: 500,
+			} as Response);
+
+			await expect(store.fetchPostalCode("100-0001")).rejects.toThrow(
+				ApiCommunicationError
+			);
+			expect(store.addresses).toHaveLength(0);
+		});
+
+		it("should throw ApiCommunicationError with correct message when HTTP response is not ok", async () => {
+			const store = useAddressStore();
+
+			vi.mocked(fetch).mockResolvedValue({
 				ok: false,
 				status: 500,
 			} as Response);
@@ -137,10 +178,30 @@ describe("useAddressStore", () => {
 			await expect(store.fetchPostalCode("100-0001")).rejects.toThrow(
 				"HTTP error! status: 500"
 			);
+		});
+
+		it("should throw ApiCommunicationError when network fails", async () => {
+			const store = useAddressStore();
+
+			vi.mocked(fetch).mockRejectedValue(new Error("Network error"));
+
+			await expect(store.fetchPostalCode("100-0001")).rejects.toThrow(
+				ApiCommunicationError
+			);
 			expect(store.addresses).toHaveLength(0);
 		});
 
-		it("should throw error when API status is not 200", async () => {
+		it("should throw ApiCommunicationError with correct message when network fails", async () => {
+			const store = useAddressStore();
+
+			vi.mocked(fetch).mockRejectedValue(new Error("Network error"));
+
+			await expect(store.fetchPostalCode("100-0001")).rejects.toThrow(
+				"Failed to communicate with the API"
+			);
+		});
+
+		it("should throw NoResultsError when API status is not 200", async () => {
 			const store = useAddressStore();
 			const mockResponse: ApiResponse = {
 				status: 400,
@@ -148,7 +209,26 @@ describe("useAddressStore", () => {
 				results: null,
 			};
 
-			vi.mocked(fetch).mockResolvedValueOnce({
+			vi.mocked(fetch).mockResolvedValue({
+				ok: true,
+				json: async () => mockResponse,
+			} as Response);
+
+			await expect(store.fetchPostalCode("invalid")).rejects.toThrow(
+				NoResultsError
+			);
+			expect(store.addresses).toHaveLength(0);
+		});
+
+		it("should throw NoResultsError with correct message when API status is not 200", async () => {
+			const store = useAddressStore();
+			const mockResponse: ApiResponse = {
+				status: 400,
+				message: "Invalid postal code",
+				results: null,
+			};
+
+			vi.mocked(fetch).mockResolvedValue({
 				ok: true,
 				json: async () => mockResponse,
 			} as Response);
@@ -156,17 +236,34 @@ describe("useAddressStore", () => {
 			await expect(store.fetchPostalCode("invalid")).rejects.toThrow(
 				"No address found for postal code invalid"
 			);
-			expect(store.addresses).toHaveLength(0);
 		});
 
-		it("should throw error when results is null", async () => {
+		it("should throw NoResultsError when results is null", async () => {
 			const store = useAddressStore();
 			const mockResponse: ApiResponse = {
 				status: 200,
 				results: null,
 			};
 
-			vi.mocked(fetch).mockResolvedValueOnce({
+			vi.mocked(fetch).mockResolvedValue({
+				ok: true,
+				json: async () => mockResponse,
+			} as Response);
+
+			await expect(store.fetchPostalCode("999-9999")).rejects.toThrow(
+				NoResultsError
+			);
+			expect(store.addresses).toHaveLength(0);
+		});
+
+		it("should throw NoResultsError with correct message when results is null", async () => {
+			const store = useAddressStore();
+			const mockResponse: ApiResponse = {
+				status: 200,
+				results: null,
+			};
+
+			vi.mocked(fetch).mockResolvedValue({
 				ok: true,
 				json: async () => mockResponse,
 			} as Response);
@@ -174,7 +271,6 @@ describe("useAddressStore", () => {
 			await expect(store.fetchPostalCode("999-9999")).rejects.toThrow(
 				"No address found for postal code 999-9999"
 			);
-			expect(store.addresses).toHaveLength(0);
 		});
 
 		it("should accumulate multiple fetched addresses", async () => {

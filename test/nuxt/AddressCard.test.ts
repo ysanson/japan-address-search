@@ -32,7 +32,7 @@ describe("AddressCard.vue", () => {
 
 		// Body contains both address lines and kana
 		expect(wrapper.text()).toContain("東京都千代田区丸の内1-1");
-		expect(wrapper.text()).toContain("ﾄｳｷｮｳﾄﾁﾖﾀﾞｸﾏﾙﾉｳﾁ");
+		expect(wrapper.text()).toContain("トウキョウトチヨダクマルノウチ");
 		expect(wrapper.text()).toContain("東京都千代田区丸の内1-2");
 
 		// hr separators for all but last
