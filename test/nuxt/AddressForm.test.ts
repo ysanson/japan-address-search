@@ -7,7 +7,8 @@ import Button from "../../app/components/Button.vue";
 
 // Mock the store module
 vi.mock("../../app/stores/addresses", async (importOriginal) => {
-	const actual = await importOriginal<typeof import("../../app/stores/addresses")>();
+	const actual =
+		await importOriginal<typeof import("../../app/stores/addresses")>();
 	return {
 		...actual,
 		useAddressStore: vi.fn(),
@@ -15,7 +16,8 @@ vi.mock("../../app/stores/addresses", async (importOriginal) => {
 });
 
 // Import after mocking
-const { useAddressStore, ApiCommunicationError, NoResultsError } = await import("../../app/stores/addresses");
+const { useAddressStore, ApiCommunicationError, NoResultsError } =
+	await import("../../app/stores/addresses");
 
 const mockUseAddressStore = vi.mocked(useAddressStore);
 

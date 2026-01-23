@@ -86,6 +86,13 @@ pnpm run test:nuxt
 
 `test:unit`はユニットテストを実行し、`test:nuxt`はコンポーネントテストを実行します。
 
+このプロジェクトでは、Playwright を使用した E2E テストも設定されています。テストを実行するには、以下のコマンドを実行してください：
+
+```bash
+pnpm playwright:install #一度だけ実行
+pnpm test:e2e
+```
+
 ## カバレッジ
 
 ```bash

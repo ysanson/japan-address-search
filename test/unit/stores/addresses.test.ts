@@ -17,7 +17,10 @@ class NoResultsError extends Error {
 }
 
 class ApiCommunicationError extends Error {
-	constructor(message: string, public originalError?: unknown) {
+	constructor(
+		message: string,
+		public originalError?: unknown
+	) {
 		super(message);
 		this.name = "ApiCommunicationError";
 	}
@@ -46,21 +49,23 @@ const useAddressStore = defineStore("addressStore", {
 				);
 			} catch (error) {
 				throw new ApiCommunicationError(
-					`Failed to communicate with the API: ${error instanceof Error ? error.message : 'Unknown error'}`,
+					`Failed to communicate with the API: ${error instanceof Error ? error.message : "Unknown error"}`,
 					error
 				);
 			}
-			
+
 			if (!response.ok) {
-				throw new ApiCommunicationError(`HTTP error! status: ${response.status}`);
+				throw new ApiCommunicationError(
+					`HTTP error! status: ${response.status}`
+				);
 			}
-			
+
 			const data: ApiResponse = await response.json();
-			
+
 			if (data.status !== 200 || data.results === null) {
 				throw new NoResultsError(postalCode);
 			}
-			
+
 			this.addresses.push(data.results);
 		},
 	},
